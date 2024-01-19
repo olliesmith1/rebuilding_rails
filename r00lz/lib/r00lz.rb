@@ -5,7 +5,7 @@ module R00lz
     def call(env)
       [200,
        {'Content-Type' => 'text/html'},
-       ['hello web from r00lz!']]
+       ['hello web from r00lz!!']]
     end
   end
 end
