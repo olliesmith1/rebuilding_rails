@@ -1,3 +1,3 @@
 require_relative 'config/app'
-require_relative "app/controllers/quotes_controller"
+$LOAD_PATH << "#{__dir__}/app"
 run Quotes::App.new
