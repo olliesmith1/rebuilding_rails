@@ -1,4 +1,5 @@
 require "r00lz/version"
+require "erb"
 
 module R00lz
   class App
@@ -19,10 +20,36 @@ module R00lz
     end
   end
 
+  class Object
+    def self.const_missing(c)
+      require "controllers/#{R00lz.to_snakecase(c.to_s)}"
+      Object.const_get(c)
+    end
+  end
+
   class Controller
     attr_reader :env
     def initialize(env)
       @env = env
     end
+
+    def request
+      @request ||= Rack::Request.new @env
+    end
+
+    def params
+      request.params
+    end
+
+    def render(name, b = binding())
+      template = "app/views/#{name}.html.erb"
+      e = ERB.new(File.read template)
+      e.result(b)
+    end
+  end
+
+  def self.to_snakecase(s)
+    s.gsub(/([A-Z+])([A-Z][a-z])/, '\1_\2').gsub(
+      /([a-z\d])([A-Z])/, '\1_\2').downcase
   end
 end
